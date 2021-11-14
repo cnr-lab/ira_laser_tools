@@ -13,8 +13,8 @@ Publish a static coordinate transform to tf using an x/y/z offset and quaternion
 
 	<!-- DEFINE HERE THE STATIC TRANFORMS, FROM BASE_FRAME (COMMON REFERENCE FRAME) TO THE VIRTUAL LASER FRAMES-->
 	<!-- WARNING: the virtual laser frame(s) *must* match the virtual laser name(s) listed in param: output_laser_scan -->
-	<node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster1" args="0 0 0 0 0.3 0 laser_frame scansx 1000" />
-	<node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster2" args="0 0 0 0 0.0 0 laser_frame scandx 1000" />
+	<!-- <node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster1" args="0 0 0 0 0.3 0 laser_frame scansx 1000" />
+	<node pkg="tf" type="static_transform_publisher" name="ira_static_broadcaster2" args="0 0 0 0 0.0 0 laser_frame scandx 1000" /> -->
 
 	<node pkg="ira_laser_tools" name="laserscan_virtualizer" type="laserscan_virtualizer" output="screen">
 		<param name="cloud_topic" value="/cloud_in"/>       <!-- INPUT POINT CLOUD -->

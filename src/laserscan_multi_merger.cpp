@@ -77,21 +77,21 @@ void LaserscanMerger::laserscan_topic_parser()
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), inserter<set<string>>(tokens, tokens.begin()));
 	vector<string> tmp_input_topics;
 
-	while (!tokens.empty())
-	{
-		ROS_INFO("Waiting for topics ...");
-		ros::master::getTopics(topics);
-		sleep(1);
+	ROS_INFO("Waiting for topics ...");
+	ros::master::getTopics(topics);
+	sleep(1);
 
-		for (int i = 0; i < topics.size(); i++)
+	for (int i = 0; i < topics.size(); i++)
+	{
+		if (topics[i].datatype == "sensor_msgs/LaserScan")
 		{
-			if (topics[i].datatype == "sensor_msgs/LaserScan" && tokens.erase(topics[i].name) > 0)
-			{
-				tmp_input_topics.push_back(topics[i].name);
-			}
+			cout << topics[i].name << "\n";
+			
+			tmp_input_topics.push_back(topics[i].name);
+			
 		}
 	}
-
+	
 	sort(tmp_input_topics.begin(), tmp_input_topics.end());
 	std::vector<string>::iterator last = std::unique(tmp_input_topics.begin(), tmp_input_topics.end());
 	tmp_input_topics.erase(last, tmp_input_topics.end());
@@ -114,6 +114,7 @@ void LaserscanMerger::laserscan_topic_parser()
 			ROS_INFO("Subscribing to topics\t%ld", scan_subscribers.size());
 			for (int i = 0; i < input_topics.size(); ++i)
 			{
+				cout << input_topics[i] << " ";
 				scan_subscribers[i] = node_.subscribe<sensor_msgs::LaserScan>(input_topics[i].c_str(), 1, boost::bind(&LaserscanMerger::scanCallback, this, _1, input_topics[i]));
 				clouds_modified[i] = false;
 				cout << input_topics[i] << " ";
