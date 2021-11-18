@@ -85,6 +85,10 @@ void LaserscanMerger::laserscan_topic_parser()
 	{
 		if (topics[i].datatype == "sensor_msgs/LaserScan")
 		{
+			if (topics[i].name == "/lidar2")
+				continue;
+			else if (topics[i].name == "/depth_scan")
+				continue;
 			cout << topics[i].name << "\n";
 			
 			tmp_input_topics.push_back(topics[i].name);
