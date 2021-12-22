@@ -80,19 +80,25 @@ void LaserscanMerger::laserscan_topic_parser()
 	ROS_INFO("Waiting for topics ...");
 	ros::master::getTopics(topics);
 	sleep(1);
+	set<string>::iterator iter;
+	for(iter=tokens.begin(); iter!=tokens.end();iter++)
+	{
+		cout << *iter << endl;
+	}
+	cout << "parsed end"<< endl;
 
 	for (int i = 0; i < topics.size(); i++)
 	{
 		if (topics[i].datatype == "sensor_msgs/LaserScan")
 		{
-			if (topics[i].name == "/lidar2")
-				continue;
-			else if (topics[i].name == "/depth_scan")
-				continue;
-			cout << topics[i].name << "\n";
-			
-			tmp_input_topics.push_back(topics[i].name);
-			
+			for(iter=tokens.begin(); iter!=tokens.end();iter++)
+			{
+				if (topics[i].name == *iter)
+				{
+					tmp_input_topics.push_back(topics[i].name);
+					continue;
+				}
+			}
 		}
 	}
 	
