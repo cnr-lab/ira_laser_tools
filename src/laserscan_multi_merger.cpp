@@ -71,7 +71,7 @@ void LaserscanMerger::laserscan_topic_parser()
 {
 	// LaserScan topics to subscribe
 	ros::master::V_TopicInfo topics;
-
+	sleep(10);
 	istringstream iss(laserscan_topics);
 	set<string> tokens;
 	copy(istream_iterator<string>(iss), istream_iterator<string>(), inserter<set<string>>(tokens, tokens.begin()));
@@ -107,7 +107,8 @@ void LaserscanMerger::laserscan_topic_parser()
 	tmp_input_topics.erase(last, tmp_input_topics.end());
 
 	// Do not re-subscribe if the topics are the same
-	if ((tmp_input_topics.size() != input_topics.size()) || !equal(tmp_input_topics.begin(), tmp_input_topics.end(), input_topics.begin()))
+	if(1)
+	//if ((tmp_input_topics.size() != input_topics.size()) || !equal(tmp_input_topics.begin(), tmp_input_topics.end(), input_topics.begin()))
 	{
 
 		// Unsubscribe from previous topics
@@ -268,7 +269,6 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points, pcl::PCLPo
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "laser_multi_merger");
-
 	LaserscanMerger _laser_merger;
 
 	dynamic_reconfigure::Server<laserscan_multi_mergerConfig> server;
