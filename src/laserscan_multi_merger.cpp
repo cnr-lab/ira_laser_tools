@@ -23,6 +23,7 @@ class LaserscanMerger
 {
 	public:
 		LaserscanMerger();
+
 		void scanCallback(const sensor_msgs::LaserScan::ConstPtr &scan, std::string topic);
 		void pointcloud_to_laserscan(Eigen::MatrixXf points, pcl::PCLPointCloud2 *merged_cloud);
 		void reconfigureCallback(laserscan_multi_mergerConfig &config, uint32_t level);
@@ -139,7 +140,7 @@ void LaserscanMerger::laserscan_topic_parser()
 LaserscanMerger::LaserscanMerger()
 {
 	ros::NodeHandle nh("~");
-
+  
 	nh.param<std::string>("destination_frame", destination_frame, "cart_frame");
 	nh.param<std::string>("cloud_destination_topic", cloud_destination_topic, "/merged_cloud");
 	nh.param<std::string>("scan_destination_topic", scan_destination_topic, "/scan_multi");
@@ -155,6 +156,7 @@ LaserscanMerger::LaserscanMerger()
 
 	point_cloud_publisher_ = node_.advertise<sensor_msgs::PointCloud2>(cloud_destination_topic.c_str(), 1, false);
 	laser_scan_publisher_ = node_.advertise<sensor_msgs::LaserScan>(scan_destination_topic.c_str(), 1, false);
+	ros::topic::waitForMessage<sensor_msgs::LaserScan>(input_topics[0],nh);
 }
 
 void LaserscanMerger::scanCallback(const sensor_msgs::LaserScan::ConstPtr &scan, std::string topic)
@@ -207,7 +209,7 @@ void LaserscanMerger::scanCallback(const sensor_msgs::LaserScan::ConstPtr &scan,
 				clouds_modified[i] = false;
 		}
 
-		point_cloud_publisher_.publish(merged_cloud);
+		// point_cloud_publisher_.publish(merged_cloud);
 
 		Eigen::MatrixXf points;
 		getPointCloudAsEigen(merged_cloud, points);
@@ -269,6 +271,9 @@ void LaserscanMerger::pointcloud_to_laserscan(Eigen::MatrixXf points, pcl::PCLPo
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "laser_multi_merger");
+	ros::Time::init();
+	// ros::Duration(10.0).sleep();
+	
 	LaserscanMerger _laser_merger;
 
 	dynamic_reconfigure::Server<laserscan_multi_mergerConfig> server;
